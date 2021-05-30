@@ -22,7 +22,7 @@ The shapenet voxels and point cloud datasets can be downloaded at this [link](ht
 
 ## Loading trained models
 
-All trained models can be downloaded from [here](https://drive.google.com/drive/folders/1r_sk5auYvllSpDG9ZjroOG0SH0v5kPmM?usp=sharing). The `load-trained-model.ipynb` notebook shows example of using a trained model.
+All trained models can be downloaded from [here](https://drive.google.com/drive/folders/1r_sk5auYvllSpDG9ZjroOG0SH0v5kPmM?usp=sharing). The `load-trained-model.ipynb` notebook shows an example of using a trained model.
 
 ## Rendering 3D samples
 
