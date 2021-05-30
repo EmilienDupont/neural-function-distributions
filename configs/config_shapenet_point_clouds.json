@@ -1,0 +1,78 @@
+{
+    "id": "shapenet_point_clouds_experiment",
+    "dataset": "shapenet_point_clouds",
+    "path_to_data": "",
+    "resolution": 32,
+    "training": {
+        "epochs": 200,
+        "batch_size": 22,
+        "max_num_points": null,
+        "lr": 2e-5,
+        "lr_disc": 8e-5,
+        "r1_weight": 10.0,
+        "print_freq": 50,
+        "model_save_freq": 50
+    },
+    "generator": {
+        "layer_sizes": [128, 128, 128],
+        "latent_dim": 64,
+        "hypernet_layer_sizes": [256, 512],
+        "encoding": {
+        "num_frequencies": 0,
+        "std_dev": 0.0
+        }
+    },
+    "discriminator": {
+        "norm_order": 2.0,
+        "add_batchnorm": true,
+        "add_weightnet_batchnorm": true,
+        "deterministic": true,
+        "same_coordinates": true,
+        "linear_layer_sizes": [],
+        "layer_configs":
+        [
+            {
+                "out_channels": 32, 
+                "num_output_points": 4096,
+                "num_neighbors": 8, 
+                "mid_channels": [16, 16, 16, 16]
+            },
+            {
+                "out_channels": 64, 
+                "num_output_points": 4096,
+                "num_neighbors": 27, 
+                "mid_channels": [16, 16, 16, 16]
+            },
+            {
+                "num_output_points": 512,
+                "num_neighbors": 27
+            },
+            {
+                "out_channels": 128, 
+                "num_output_points": 512,
+                "num_neighbors": 27, 
+                "mid_channels": [16, 16, 16, 16]
+            },
+            {
+                "num_output_points": 64,
+                "num_neighbors": 27
+            },
+            {
+                "out_channels": 256, 
+                "num_output_points": 64,
+                "num_neighbors": 27, 
+                "mid_channels": [16, 16, 16, 16]
+            },
+            {
+                "num_output_points": 8,
+                "num_neighbors": 27
+            },
+            {
+                "out_channels": 1, 
+                "num_output_points": 1,
+                "num_neighbors": 8, 
+                "mid_channels": [16, 16, 16, 16]
+            }
+        ]
+    }
+}
