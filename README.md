@@ -2,7 +2,7 @@
 
 This repo contains code to reproduce all experiments in [Generative Models as Distributions of Functions](https://arxiv.org/abs/2102.04776).
 
-<img src="https://github.com/EmilienDupont/neural-function-distributions/raw/main/imgs/example.gif" width="500">
+<img src="https://github.com/EmilienDupont/neural-function-distributions/raw/main/imgs/example.gif" height="200"> <img src="https://github.com/EmilienDupont/neural-function-distributions/raw/main/imgs/example.gif" height="200">
 
 ## Requirements
 
@@ -18,7 +18,7 @@ Example configs to reproduce the results in the paper are provided in the `confi
 
 ## Downloading datasets
 
-The shapenet voxels and point cloud datasets can be downloaded at this [link](https://drive.google.com/drive/folders/1r_sk5auYvllSpDG9ZjroOG0SH0v5kPmM?usp=sharing). The CelebAHQ datasets can be downloaded from [here](https://drive.google.com/drive/folders/11Vz0fqHS2rXDb5pprgTjpD7S2BAJhi1P).
+The shapenet and ERA5 climate datasets can be downloaded at this [link](https://drive.google.com/drive/folders/1r_sk5auYvllSpDG9ZjroOG0SH0v5kPmM?usp=sharing). The CelebAHQ datasets can be downloaded from [here](https://drive.google.com/drive/folders/11Vz0fqHS2rXDb5pprgTjpD7S2BAJhi1P).
 
 ## Loading trained models
 
@@ -33,6 +33,10 @@ Once these requirements have been installed, you can render samples using
 ```python render_mesh.py -sp samples -mr 32 -rs 64 -ns 8 -mp trained-models/shapenet_voxels/model.pt```
 
 See `render_mesh.py` for a full list of rendering options.
+
+## Globe plots
+
+By default the samples from the climate data will be visualized as flat projections. Plotting these on a globe (using the `viz/plots_globe.py` functions) requires the [cartopy](https://scitools.org.uk/cartopy/docs/latest/) library. Installation instructions for this library can be found [here](https://scitools.org.uk/cartopy/docs/latest/installing.html).
 
 ## License
 

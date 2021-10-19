@@ -22,6 +22,7 @@ class Trainer():
             generator and discriminator.
         is_voxel (bool): If True, considers data as voxels.
         is_point_cloud (bool): If True, considers data as point clouds.
+        is_era5 (bool): If True, considers data as ERA5 surface temperatures.
         print_freq (int): Frequency with which to print loss.
         save_dir (string): Path to a directory where experiment logs and images
             will be saved.
@@ -29,8 +30,8 @@ class Trainer():
     """
     def __init__(self, device, function_distribution, discriminator,
                  data_converter, lr=2e-4, lr_disc=2e-4, betas=(0.5, 0.999),
-                 r1_weight=0, max_num_points=None, is_voxel=False, 
-                 is_point_cloud=False, print_freq=1, save_dir='', 
+                 r1_weight=0, max_num_points=None, is_voxel=False,
+                 is_point_cloud=False, is_era5=False, print_freq=1, save_dir='',
                  model_save_freq=0):
         self.device = device
         self.function_distribution = function_distribution
@@ -40,6 +41,7 @@ class Trainer():
         self.max_num_points = max_num_points
         self.is_voxel = is_voxel
         self.is_point_cloud = is_point_cloud
+        self.is_era5 = is_era5
 
         self.bce = torch.nn.BCELoss()
 
@@ -57,7 +59,7 @@ class Trainer():
         self.print_freq = print_freq
         self.save_dir = save_dir
         # Ensure number of samples saved is not too large when data itself
-        # is large 
+        # is large
         if data_converter.data_shape[1] < 65:
             self.num_samples_to_save = 32
         elif data_converter.data_shape[1] >= 65:
@@ -112,13 +114,19 @@ class Trainer():
         # Save samples as grid
         if self.is_voxel:
             # Voxels lie in [0, 1], so use 0.5 as a threshold
-            plot_voxels_batch(samples.detach().cpu() > .5, save_fig=self.save_dir + "/" + filename, 
+            plot_voxels_batch(samples.detach().cpu() > .5, save_fig=self.save_dir + "/" + filename,
                               ncols=self.num_samples_to_save // 4)
         elif self.is_point_cloud:
-            plot_point_cloud_batch(samples.detach().cpu(), save_fig=self.save_dir + "/" + filename, 
+            plot_point_cloud_batch(samples.detach().cpu(), save_fig=self.save_dir + "/" + filename,
                               ncols=self.num_samples_to_save // 4)
+        elif self.is_era5:
+            # ERA5 data has shape (batch_size, 3, num_lats, num_lons) where 3rd
+            # dimension of 2nd axis corresponds to temperature, so extract this
+            # (will correspond to grayscale image)
+            save_image(samples[:, 2:3].detach().cpu(), self.save_dir + "/" + filename,
+                       nrow=self.num_samples_to_save // 4)
         else:
-            save_image(samples.detach().cpu(), self.save_dir + "/" + filename, 
+            save_image(samples.detach().cpu(), self.save_dir + "/" + filename,
                        nrow=self.num_samples_to_save // 4)
 
     def train(self, dataloader, epochs):
@@ -134,13 +142,16 @@ class Trainer():
             real_samples = torch.cat([dataloader.dataset[i][0].unsqueeze(0)
                                      for i in range(self.num_samples_to_save)], dim=0)
             if self.is_voxel:
-                plot_voxels_batch(real_samples.float() > .5, save_fig=self.save_dir + "/ground_truth.png", 
+                plot_voxels_batch(real_samples.float() > .5, save_fig=self.save_dir + "/ground_truth.png",
                               ncols=self.num_samples_to_save // 4)
             elif self.is_point_cloud:
-                plot_point_cloud_batch(real_samples.float(), save_fig=self.save_dir + "/ground_truth.png", 
+                plot_point_cloud_batch(real_samples.float(), save_fig=self.save_dir + "/ground_truth.png",
                               ncols=self.num_samples_to_save // 4)
-            else:              
-                save_image(real_samples, self.save_dir + "/ground_truth.png", 
+            elif self.is_era5:
+                save_image(real_samples[:, 2:3], self.save_dir + "/ground_truth.png",
+                           nrow=self.num_samples_to_save // 4)
+            else:
+                save_image(real_samples, self.save_dir + "/ground_truth.png",
                            nrow=self.num_samples_to_save // 4)
 
         for epoch in range(epochs):
@@ -283,7 +294,7 @@ def norm_gradient_squared(outputs, inputs, sum_over_points=True):
         inputs (torch.Tensor): Shape (batch_size, num_points, coordinate_dim + feature_dim)
             or shape (batch_size, num_points, feature_dim) depending on whether gradient
             is over coordinates and features or only features.
-        sum_over_points (bool): If True, sums over num_points dimension, otherwise takes mean. 
+        sum_over_points (bool): If True, sums over num_points dimension, otherwise takes mean.
 
     Notes:
         This is inspired by the function in this repo
@@ -329,4 +340,4 @@ def mean(array):
     Args:
         array (list of ints or floats):
     """
-    return sum(array) / len(array)  
+    return sum(array) / len(array)

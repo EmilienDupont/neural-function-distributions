@@ -1,0 +1,82 @@
+{
+  "id": "era5_experiment",
+  "dataset": "era5",
+  "path_to_data": "",
+  "resolution": 64,
+  "training": {
+    "epochs": 300,
+    "batch_size": 64,
+    "max_num_points": null,
+    "lr": 1e-4,
+    "lr_disc": 4e-4,
+    "r1_weight": 10.0,
+    "print_freq": 50,
+    "model_save_freq": 50
+  },
+  "generator": {
+    "layer_sizes": [128, 128, 128],
+    "latent_dim": 64,
+    "hypernet_layer_sizes": [256, 512],
+    "encoding": {
+      "num_frequencies": 128,
+      "std_dev": 2.0
+    }
+  },
+  "discriminator": {
+    "norm_order": 2.0,
+    "add_batchnorm": true,
+    "add_weightnet_batchnorm": true,
+    "deterministic": true,
+    "same_coordinates": true,
+    "linear_layer_sizes": [],
+    "layer_configs":
+    [
+      {
+        "out_channels": 64,
+        "num_output_points": 4096,
+        "num_neighbors": 9,
+        "mid_channels": [16, 16, 16, 16]
+      },
+      {
+        "num_output_points": 1024,
+        "num_neighbors": 9
+      },
+      {
+        "out_channels": 128,
+        "num_output_points": 1024,
+        "num_neighbors": 9,
+        "mid_channels": [16, 16, 16, 16]
+      },
+      {
+        "num_output_points": 256,
+        "num_neighbors": 9
+      },
+      {
+        "out_channels": 256,
+        "num_output_points": 256,
+        "num_neighbors": 9,
+        "mid_channels": [16, 16, 16, 16]
+      },
+      {
+        "num_output_points": 64,
+        "num_neighbors": 9
+      },
+      {
+        "out_channels": 512,
+        "num_output_points": 64,
+        "num_neighbors": 9,
+        "mid_channels": [16, 16, 16, 16]
+      },
+      {
+        "num_output_points": 16,
+        "num_neighbors": 9
+      },
+      {
+        "out_channels": 1,
+        "num_output_points": 1,
+        "num_neighbors": 16,
+        "mid_channels": [16, 16, 16, 16]
+      }
+    ]
+  }
+}

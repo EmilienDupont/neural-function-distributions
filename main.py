@@ -4,8 +4,9 @@ import sys
 import time
 import torch
 from training.training import Trainer
-from data.conversion import GridDataConverter, PointCloudDataConverter
+from data.conversion import GridDataConverter, PointCloudDataConverter, ERA5Converter
 from data.dataloaders import mnist, celebahq
+from data.dataloaders_era5 import era5
 from data.dataloaders3d import shapenet_voxels, shapenet_point_clouds
 from models.discriminator import PointConvDiscriminator
 from models.function_distribution import HyperNetwork, FunctionDistribution
@@ -43,24 +44,25 @@ with open(directory + '/config.json', 'w') as f:
 # Setup dataloader
 is_voxel = False
 is_point_cloud = False
+is_era5 = False
 if config["dataset"] == 'mnist':
-    dataloader = mnist(path_to_data=config["path_to_data"], 
-                       batch_size=config["training"]["batch_size"], 
-                       size=config["resolution"], 
+    dataloader = mnist(path_to_data=config["path_to_data"],
+                       batch_size=config["training"]["batch_size"],
+                       size=config["resolution"],
                        train=True)
     input_dim = 2
     output_dim = 1
     data_shape = (1, config["resolution"], config["resolution"])
 elif config["dataset"] == 'celebahq':
     dataloader = celebahq(path_to_data=config["path_to_data"],
-                          batch_size=config["training"]["batch_size"], 
+                          batch_size=config["training"]["batch_size"],
                           size=config["resolution"])
     input_dim = 2
     output_dim = 3
     data_shape = (3, config["resolution"], config["resolution"])
 elif config["dataset"] == 'shapenet_voxels':
     dataloader = shapenet_voxels(path_to_data=config["path_to_data"],
-                                 batch_size=config["training"]["batch_size"], 
+                                 batch_size=config["training"]["batch_size"],
                                  size=config["resolution"])
     input_dim = 3
     output_dim = 1
@@ -73,11 +75,20 @@ elif config["dataset"] == 'shapenet_point_clouds':
     output_dim = 1
     data_shape = (1, config["resolution"], config["resolution"], config["resolution"])
     is_point_cloud = True
+elif config["dataset"] == 'era5':
+    dataloader = era5(path_to_data=config["path_to_data"],
+                      batch_size=config["training"]["batch_size"])
+    input_dim = 3
+    output_dim = 1
+    data_shape = (46, 90)
+    is_era5 = True
 
 
 # Setup data converter
 if is_point_cloud:
     data_converter = PointCloudDataConverter(device, data_shape, normalize_features=True)
+elif is_era5:
+    data_converter = ERA5Converter(device, data_shape, normalize_features=True)
 else:
     data_converter = GridDataConverter(device, data_shape, normalize_features=True)
 
@@ -129,5 +140,6 @@ trainer = Trainer(device, function_distribution, discriminator, data_converter,
                   max_num_points=config["training"]["max_num_points"],
                   print_freq=config["training"]["print_freq"], save_dir=directory,
                   model_save_freq=config["training"]["model_save_freq"],
-                  is_voxel=is_voxel, is_point_cloud=is_point_cloud)
+                  is_voxel=is_voxel, is_point_cloud=is_point_cloud,
+                  is_era5=is_era5)
 trainer.train(dataloader, config["training"]["epochs"])
