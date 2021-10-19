@@ -2,7 +2,7 @@
 
 This repo contains code to reproduce all experiments in [Generative Models as Distributions of Functions](https://arxiv.org/abs/2102.04776).
 
-<img src="https://github.com/EmilienDupont/neural-function-distributions/raw/main/imgs/example.gif" height="200"> <img src="https://github.com/EmilienDupont/neural-function-distributions/raw/main/imgs/example.gif" height="200">
+<img src="https://github.com/EmilienDupont/neural-function-distributions/raw/main/imgs/example.gif" height="200"> <img src="https://github.com/EmilienDupont/neural-function-distributions/raw/main/imgs/era5.gif" height="200">
 
 ## Requirements
 
