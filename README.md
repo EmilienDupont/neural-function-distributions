@@ -18,7 +18,7 @@ Example configs to reproduce the results in the paper are provided in the `confi
 
 ## Downloading datasets
 
-The shapenet and ERA5 climate datasets can be downloaded at this [link](https://drive.google.com/drive/folders/1r_sk5auYvllSpDG9ZjroOG0SH0v5kPmM?usp=sharing). The CelebAHQ datasets can be downloaded from [here](https://drive.google.com/drive/folders/11Vz0fqHS2rXDb5pprgTjpD7S2BAJhi1P).
+The shapenet and ERA5 climate datasets can be downloaded at this [link](https://drive.google.com/drive/folders/1r_sk5auYvllSpDG9ZjroOG0SH0v5kPmM?usp=sharing). The CelebAHQ datasets can be downloaded from [here](https://www.kaggle.com/datasets/lamsimon/celebahq/data).
 
 ## Loading trained models
 
